@@ -22,34 +22,20 @@ public static void main(String[] args) {
  */
 public static String readValidName(Scanner scanner) {
     String name;
-    // Regex: tillåtna tecken + längdkrav
-    String nameRegex = "[a-zA-ZåäöÅÄÖ\\s-]{2,}";
+    // Regex: minst 2 bokstäver i början, ev. fler ord med bindestreck/mellanslag
+    String nameRegex = "^[a-zA-ZåäöÅÄÖ]{2,}([\\s-][a-zA-ZåäöÅÄÖ]+)*$";
 
     while (true) {
         System.out.print("Ange ditt namn: ");
-        name = scanner.nextLine().trim(); // trim tar bort ledande/slutande mellanslag
+        name = scanner.nextLine().trim(); // ta bort ledande/slutande mellanslag
 
-        // Kontrollera att namnet matchar mönstret
+        // Kontrollera mot regexen
         if (!name.matches(nameRegex)) {
-            System.out.println("Ogiltig inmatning. Namn måste vara minst 2 tecken och får endast innehålla bokstäver, mellanslag eller bindestreck.");
+            System.out.println("Ogiltig inmatning. Namn måste vara minst 2 bokstäver och får endast innehålla bokstäver, mellanslag eller bindestreck.");
             continue;
         }
 
-        // Ytterligare kontroll: namnet får inte bara vara mellanslag eller bindestreck
-        // (t.ex. "--" eller "  ")
-        String lettersOnly = name.replaceAll("[\\s-]", ""); // ta bort mellanslag och bindestreck
-        if (lettersOnly.length() < 2) {
-            System.out.println("Ogiltigt namn. Ange ett verkligt namn (minst 2 bokstäver).");
-            continue;
-        }
-
-        // (Valfritt) Kontroll att namnet börjar med en bokstav
-        if (!Character.isLetter(name.charAt(0))) {
-            System.out.println("Namnet måste börja med en bokstav.");
-            continue;
-        }
-
-        // Om allt ok: bryt loopen
+        // Om allt ok, bryt loopen
         break;
     }
 
