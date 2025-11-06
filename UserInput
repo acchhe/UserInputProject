@@ -39,7 +39,7 @@ public static String readValidName(Scanner scanner) {
         break;
     }
 
-    return name;
+    return name; // Efter att korrekt namn har angivits, kan vi breaka ur loopen och returnera namnet som skrevs in.
 }
 
 /**
