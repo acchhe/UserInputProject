@@ -1,0 +1,100 @@
+public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+
+    // Läs giltigt namn (repeterar tills input är acceptabel)
+    String name = readValidName(scanner);
+
+    // Läs giltig ålder (repeterar tills input är acceptabel)
+    int age = readValidAge(scanner);
+
+    System.out.println();
+    System.out.println("Välkommen, " + name + "! Du är " + age + " år gammal.");
+
+    scanner.close();
+}
+
+/**
+ * Läser in och returnerar ett giltigt namn.
+ * Regler:
+ *  - Minst 2 tecken (exklusive ledande/slutande mellanslag)
+ *  - Får innehålla bokstäver (inkl. åäö/ÅÄÖ), mellanslag och bindestreck
+ *  - Får ej innehålla siffror eller andra specialtecken
+ */
+public static String readValidName(Scanner scanner) {
+    String name;
+    // Regex: tillåtna tecken + längdkrav
+    String nameRegex = "[a-zA-ZåäöÅÄÖ\\s-]{2,}";
+
+    while (true) {
+        System.out.print("Ange ditt namn: ");
+        name = scanner.nextLine().trim(); // trim tar bort ledande/slutande mellanslag
+
+        // Kontrollera att namnet matchar mönstret
+        if (!name.matches(nameRegex)) {
+            System.out.println("Ogiltig inmatning. Namn måste vara minst 2 tecken och får endast innehålla bokstäver, mellanslag eller bindestreck.");
+            continue;
+        }
+
+        // Ytterligare kontroll: namnet får inte bara vara mellanslag eller bindestreck
+        // (t.ex. "--" eller "  ")
+        String lettersOnly = name.replaceAll("[\\s-]", ""); // ta bort mellanslag och bindestreck
+        if (lettersOnly.length() < 2) {
+            System.out.println("Ogiltigt namn. Ange ett verkligt namn (minst 2 bokstäver).");
+            continue;
+        }
+
+        // (Valfritt) Kontroll att namnet börjar med en bokstav
+        if (!Character.isLetter(name.charAt(0))) {
+            System.out.println("Namnet måste börja med en bokstav.");
+            continue;
+        }
+
+        // Om allt ok: bryt loopen
+        break;
+    }
+
+    return name;
+}
+
+/**
+ * Läser in och returnerar en giltig ålder som int.
+ * Regler:
+ *  - Endast siffror tillåtna
+ *  - Konverteras till int och kontrolleras mot rimligt intervall (0-120)
+ *  - Repeterar tills giltig input
+ */
+public static int readValidAge(Scanner scanner) {
+    String ageInput;
+    int age;
+
+    while (true) {
+        System.out.print("Ange din ålder: ");
+        ageInput = scanner.nextLine().trim();
+
+        // Kontroll: endast siffror (minst en siffra)
+        if (!ageInput.matches("[0-9]+")) {
+            System.out.println("Ogiltig inmatning. Ange endast siffror (t.ex. 25).");
+            continue;
+        }
+
+        // Försök omvandla till int med felhantering för säkerhet
+        try {
+            age = Integer.parseInt(ageInput);
+        } catch (NumberFormatException e) {
+            // Skydd mot extremt stora tal som inte får plats i int
+            System.out.println("Talet är för stort. Ange en rimlig ålder.");
+            continue;
+        }
+
+        // Kontrollera rimligt intervall
+        if (age < 0 || age > 120) {
+            System.out.println("Ogiltig ålder. Ange en ålder mellan 0 och 120.");
+            continue;
+        }
+
+        // Om allt ok: bryt loopen
+        break;
+    }
+
+    return age;
+}
